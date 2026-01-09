@@ -1,44 +1,31 @@
-alert("JS connected ✅");
 const form = document.getElementById("todoForm");
 const input = document.getElementById("todoInput");
 const list = document.getElementById("todoList");
 
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", function (e) {
   e.preventDefault();
 
   const text = input.value.trim();
-  if (!text) return;
+  if (text === "") return;
 
   const li = document.createElement("li");
-  li.className = "item";
+  li.textContent = text;
 
-  const span = document.createElement("span");
-  span.className = "text";
-  span.textContent = text;
-
-  const actions = document.createElement("div");
-  actions.className = "actions";
-
-  const doneBtn = document.createElement("button");
-  doneBtn.className = "small";
-  doneBtn.textContent = "Done";
-  doneBtn.addEventListener("click", () => {
+  li.addEventListener("click", () => {
     li.classList.toggle("done");
   });
 
-  const delBtn = document.createElement("button");
-  delBtn.className = "small";
-  delBtn.textContent = "Delete";
-  delBtn.addEventListener("click", () => {
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "✖";
+  deleteBtn.style.marginLeft = "10px";
+
+  deleteBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
     li.remove();
   });
 
-  actions.appendChild(doneBtn);
-  actions.appendChild(delBtn);
-
-  li.appendChild(span);
-  li.appendChild(actions);
-
+  li.appendChild(deleteBtn);
   list.appendChild(li);
+
   input.value = "";
 });
