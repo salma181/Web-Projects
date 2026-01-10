@@ -51,3 +51,36 @@ hr {
 ul li {
   margin-bottom: 8px;
 }
+.project-card{
+  background: rgba(255, 235, 245, 0.9);
+  border: 1px solid rgba(231, 84, 128, 0.25);
+  padding: 18px 20px;
+  border-radius: 18px;
+  max-width: 520px;
+  margin-top: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.project-card h4{
+  margin: 0 0 6px;
+  color: #e75480;
+}
+
+.project-card p{
+  margin: 0 0 12px;
+  color: #444;
+}
+
+.project-link{
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: #e75480;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.project-link:hover{
+  filter: brightness(0.95);
+}
