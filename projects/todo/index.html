@@ -2,28 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>To-Do List | Salma</title>
+
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <main class="card">
+  <div class="container">
     <h1>To-Do List ✅</h1>
-    <p class="sub">Add tasks, mark done, and delete.</p>
+    <p>Add tasks, mark done, and delete.</p>
 
-    <form id="todoForm" class="row">
-      <input id="todoInput" type="text" placeholder="Write a task..." autocomplete="off" />
-      <button type="submit">Add</button>
-    </form>
+    <div class="input-group">
+      <input
+        type="text"
+        id="taskInput"
+        placeholder="Write a task..."
+      />
+      <button id="addBtn">Add</button>
+    </div>
 
-    <ul id="todoList" class="list"></ul>
+    <ul id="taskList"></ul>
 
-    <p class="footer">
-      <a href="../../index.html">← Back to portfolio</a>
-    </p>
-  </main>
+    <a class="back" href="../../index.html">← Back to portfolio</a>
+  </div>
 
+  <!-- JS -->
   <script src="script.js"></script>
 </body>
 </html>
