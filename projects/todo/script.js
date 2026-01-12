@@ -1,84 +1,51 @@
-// عناصر الصفحة
-const todoForm = document.getElementById("todoForm");
-const todoInput = document.getElementById("todoInput");
-const todoList = document.getElementById("todoList");
+const input = document.getElementById("taskInput");
+const addBtn = document.getElementById("addBtn");
+const taskList = document.getElementById("taskList");
 
-// مفتاح التخزين
-const STORAGE_KEY = "salma_todo_tasks";
+function createTask(text) {
+  const li = document.createElement("li");
 
-// قراءة المهام من التخزين
-function getTasks() {
-  const data = localStorage.getItem(STORAGE_KEY);
-  return data ? JSON.parse(data) : [];
-}
+  const span = document.createElement("span");
+  span.className = "task-text";
+  span.textContent = text;
 
-// حفظ المهام في التخزين
-function saveTasks(tasks) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-}
+  const actions = document.createElement("div");
+  actions.className = "actions";
 
-// رسم المهام في الصفحة
-function renderTasks() {
-  todoList.innerHTML = "";
-  const tasks = getTasks();
+  const doneBtn = document.createElement("button");
+  doneBtn.className = "icon-btn done-btn";
+  doneBtn.textContent = "✅";
+  doneBtn.title = "Done";
 
-  tasks.forEach((task, index) => {
-    const li = document.createElement("li");
-    li.className = "todo-item";
+  const delBtn = document.createElement("button");
+  delBtn.className = "icon-btn del-btn";
+  delBtn.textContent = "❌";
+  delBtn.title = "Delete";
 
-    // نص المهمة
-    const span = document.createElement("span");
-    span.textContent = task.text;
-    span.className = task.done ? "done" : "";
-
-    // زر Done
-    const doneBtn = document.createElement("button");
-    doneBtn.textContent = "Done";
-    doneBtn.className = "btn done-btn";
-    doneBtn.addEventListener("click", () => {
-      const updated = getTasks();
-      updated[index].done = !updated[index].done;
-      saveTasks(updated);
-      renderTasks();
-    });
-
-    // زر Delete
-    const delBtn = document.createElement("button");
-    delBtn.textContent = "Delete";
-    delBtn.className = "btn del-btn";
-    delBtn.addEventListener("click", () => {
-      const updated = getTasks();
-      updated.splice(index, 1);
-      saveTasks(updated);
-      renderTasks();
-    });
-
-    // تجميع داخل li
-    const actions = document.createElement("div");
-    actions.className = "actions";
-    actions.appendChild(doneBtn);
-    actions.appendChild(delBtn);
-
-    li.appendChild(span);
-    li.appendChild(actions);
-    todoList.appendChild(li);
+  doneBtn.addEventListener("click", () => {
+    li.classList.toggle("done");
   });
+
+  delBtn.addEventListener("click", () => {
+    li.remove();
+  });
+
+  actions.appendChild(doneBtn);
+  actions.appendChild(delBtn);
+
+  li.appendChild(span);
+  li.appendChild(actions);
+
+  taskList.appendChild(li);
 }
 
-// إضافة مهمة جديدة
-todoForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  const text = todoInput.value.trim();
+addBtn.addEventListener("click", () => {
+  const text = input.value.trim();
   if (!text) return;
-
-  const tasks = getTasks();
-  tasks.push({ text, done: false });
-  saveTasks(tasks);
-
-  todoInput.value = "";
-  renderTasks();
+  createTask(text);
+  input.value = "";
 });
 
-// أول ما تفتح الصفحة ارسم المهام المخزنة
-renderTasks();
+input.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") addBtn.click();
+});
