@@ -1,301 +1,77 @@
-"use strict";
-
-/* ========= إعدادات التخزين ========= */
-const STORAGE_KEY = "salma_todo_v1";
-
-/* ========= عناصر الصفحة ========= */
-const taskForm = document.getElementById("taskForm");
-const taskInput = document.getElementById("taskInput");
-const taskList = document.getElementById("taskList");
-const searchInput = document.getElementById("searchInput");
-const countText = document.getElementById("countText");
-const doneText = document.getElementById("doneText");
-const clearDoneBtn = document.getElementById("clearDone");
-const clearAllBtn = document.getElementById("clearAll");
-const toastEl = document.getElementById("toast");
-
-const filterButtons = Array.from(document.querySelectorAll(".seg-btn"));
-
-/* ========= حالة التطبيق ========= */
-let tasks = loadTasks(); // [{id, text, done, createdAt}]
-let currentFilter = "all";
-let currentSearch = "";
-
-/* ========= تشغيل أولي ========= */
-render();
-
-/* ========= أحداث ========= */
-taskForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  addTask();
-});
-
-searchInput.addEventListener("input", () => {
-  currentSearch = searchInput.value.trim().toLowerCase();
-  render();
-});
-
-filterButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    filterButtons.forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    currentFilter = btn.dataset.filter;
-    render();
-  });
-});
-
-clearDoneBtn.addEventListener("click", () => {
-  const before = tasks.length;
-  tasks = tasks.filter(t => !t.done);
-  saveTasks();
-  render();
-  if (before === tasks.length) showToast("ما فيه مهام منجزة لمسحها ✅");
-  else showToast("تم مسح المهام المنجزة ✅");
-});
-
-clearAllBtn.addEventListener("click", () => {
-  if (!tasks.length) return showToast("القائمة فاضية 🌸");
-  const ok = confirm("متأكدة تبغي تمسحي كل المهام؟");
-  if (!ok) return;
-  tasks = [];
-  saveTasks();
-  render();
-  showToast("تم مسح كل المهام ❌");
-});
-
-/* Delegation للأزرار داخل القائمة */
-taskList.addEventListener("click", (e) => {
-  const btn = e.target.closest("button");
-  if (!btn) return;
-
-  const li = btn.closest("li");
-  if (!li) return;
-
-  const id = li.dataset.id;
-
-  if (btn.classList.contains("done-btn")) {
-    toggleDone(id);
-  }
-
-  if (btn.classList.contains("delete-btn")) {
-    deleteTask(id);
-  }
-
-  if (btn.classList.contains("edit-btn")) {
-    editTask(id);
-  }
-});
-
-/* Enter على المهمة للتعديل السريع */
-taskList.addEventListener("dblclick", (e) => {
-  const textEl = e.target.closest(".text");
-  if (!textEl) return;
-  const li = textEl.closest("li");
-  if (!li) return;
-  editTask(li.dataset.id);
-});
-
-/* ========= Drag & Drop ========= */
-let dragId = null;
-
-taskList.addEventListener("dragstart", (e) => {
-  const li = e.target.closest("li");
-  if (!li) return;
-  dragId = li.dataset.id;
-  li.classList.add("dragging");
-  e.dataTransfer.effectAllowed = "move";
-});
-
-taskList.addEventListener("dragend", (e) => {
-  const li = e.target.closest("li");
-  if (li) li.classList.remove("dragging");
-  dragId = null;
-});
-
-taskList.addEventListener("dragover", (e) => {
-  e.preventDefault();
-  const afterEl = getDragAfterElement(taskList, e.clientY);
-  const draggingEl = taskList.querySelector(".dragging");
-  if (!draggingEl) return;
-
-  if (afterEl == null) {
-    taskList.appendChild(draggingEl);
-  } else {
-    taskList.insertBefore(draggingEl, afterEl);
-  }
-});
-
-taskList.addEventListener("drop", () => {
-  // بعد ما يخلص سحب، نحفظ ترتيب القائمة حسب DOM
-  const orderedIds = Array.from(taskList.children).map(li => li.dataset.id);
-  tasks.sort((a, b) => orderedIds.indexOf(a.id) - orderedIds.indexOf(b.id));
-  saveTasks();
-  showToast("تم ترتيب المهام ✨");
-});
-
-/* ========= وظائف ========= */
-function addTask() {
-  const text = taskInput.value.trim();
-  if (!text) return showToast("اكتبي مهمة أولًا ✍️");
-  if (text.length < 2) return showToast("اكتبيها أوضح شوي 🌸");
-
-  const newTask = {
-    id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-    text,
-    done: false,
-    createdAt: Date.now(),
-  };
-
-  tasks.unshift(newTask);
-  taskInput.value = "";
-  saveTasks();
-  render();
-  showToast("تمت الإضافة ✅");
+/* ====== Global ====== */
+* {
+  box-sizing: border-box;
 }
 
-function toggleDone(id) {
-  const t = tasks.find(x => x.id === id);
-  if (!t) return;
-  t.done = !t.done;
-  saveTasks();
-  render();
-  showToast(t.done ? "تم ✅" : "رجعناها غير منجزة 🌸");
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  color: #333;
+  position: relative;
 }
 
-function deleteTask(id) {
-  const t = tasks.find(x => x.id === id);
-  tasks = tasks.filter(x => x.id !== id);
-  saveTasks();
-  render();
-  showToast(`تم الحذف ❌`);
+/* ====== Background Image (bj.jpg in root) ====== */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("./bj.jpg") center / cover no-repeat;
+  opacity: 0.25; /* شفافية الخلفية */
+  z-index: -1;
 }
 
-function editTask(id) {
-  const t = tasks.find(x => x.id === id);
-  if (!t) return;
-
-  const newText = prompt("عدّلي نص المهمة:", t.text);
-  if (newText === null) return; // cancel
-
-  const trimmed = newText.trim();
-  if (!trimmed) return showToast("ما ينفع تكون فاضية 🙈");
-
-  t.text = trimmed;
-  saveTasks();
-  render();
-  showToast("تم التعديل ✨");
+/* ====== Card ====== */
+.container {
+  max-width: 650px;
+  background: rgba(255, 235, 245, 0.9);
+  padding: 32px;
+  border-radius: 18px;
+  margin: 50px auto;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
 }
 
-function getVisibleTasks() {
-  let list = [...tasks];
-
-  // filter
-  if (currentFilter === "active") list = list.filter(t => !t.done);
-  if (currentFilter === "done") list = list.filter(t => t.done);
-
-  // search
-  if (currentSearch) {
-    list = list.filter(t => t.text.toLowerCase().includes(currentSearch));
-  }
-
-  return list;
+/* ====== Headings ====== */
+h1 {
+  color: #e75480;
+  margin-top: 0;
 }
 
-function render() {
-  const visible = getVisibleTasks();
-
-  // Counters
-  const total = tasks.length;
-  const done = tasks.filter(t => t.done).length;
-  countText.textContent = `${total} مهام`;
-  doneText.textContent = `${done} منجز`;
-
-  // Render list
-  taskList.innerHTML = "";
-
-  if (!visible.length) {
-    const empty = document.createElement("li");
-    empty.className = "item";
-    empty.innerHTML = `
-      <div class="left">
-        <span class="text" style="color:#777;font-weight:700;">ما فيه مهام هنا… ابدأي بإضافة مهمة 🌸</span>
-      </div>
-    `;
-    taskList.appendChild(empty);
-    return;
-  }
-
-  for (const t of visible) {
-    const li = document.createElement("li");
-    li.className = "item";
-    li.dataset.id = t.id;
-    li.setAttribute("draggable", "true");
-
-    li.innerHTML = `
-      <div class="left">
-        <span class="drag" title="اسحبي للترتيب">⋮⋮</span>
-        <span class="text ${t.done ? "done" : ""}">${escapeHtml(t.text)}</span>
-      </div>
-
-      <div class="actions">
-        <button class="icon-btn done-btn done" type="button" title="تم ✅" aria-label="تم">✅</button>
-        <button class="icon-btn edit-btn edit" type="button" title="تعديل ✏️" aria-label="تعديل">✏️</button>
-        <button class="icon-btn delete-btn del" type="button" title="حذف ❌" aria-label="حذف">❌</button>
-      </div>
-    `;
-
-    taskList.appendChild(li);
-  }
+h2 {
+  color: #444;
 }
 
-function saveTasks() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+.badge {
+  background: #f7b7c8;
+  color: #fff;
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
 }
 
-function loadTasks() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.map(t => ({
-      id: String(t.id),
-      text: String(t.text ?? ""),
-      done: Boolean(t.done),
-      createdAt: Number(t.createdAt ?? Date.now()),
-    }));
-  } catch {
-    return [];
-  }
+/* ====== Divider & Lists ====== */
+hr {
+  margin: 25px 0;
+  border: none;
+  border-top: 1px solid rgba(0,0,0,0.12);
 }
 
-function showToast(msg) {
-  toastEl.textContent = msg;
-  toastEl.classList.add("show");
-  clearTimeout(showToast._t);
-  showToast._t = setTimeout(() => toastEl.classList.remove("show"), 1800);
+ul li {
+  margin-bottom: 8px;
 }
 
-function escapeHtml(str) {
-  return str
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+/* ====== Links ====== */
+a {
+  color: #e75480;
+  text-decoration: none;
+  font-weight: 600;
 }
 
-/* Drag helper */
-function getDragAfterElement(container, y) {
-  const draggableElements = [...container.querySelectorAll("li.item:not(.dragging)")];
-
-  return draggableElements.reduce((closest, child) => {
-    const box = child.getBoundingClientRect();
-    const offset = y - box.top - box.height / 2;
-
-    if (offset < 0 && offset > closest.offset) {
-      return { offset, element: child };
-    }
-    return closest;
-  }, { offset: Number.NEGATIVE_INFINITY, element: null }).element;
+a:hover {
+  text-decoration: underline;
 }
+
+
+
+
