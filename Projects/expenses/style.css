@@ -1,1 +1,251 @@
+:root{
+  --bg: #eaf4ff;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
 
+  --primary: #1e40af;     /* dark blue */
+  --primaryHover: #1d4ed8;
+
+  --income: #16a34a;
+  --expense: #dc2626;
+
+  --shadow: 0 10px 30px rgba(0,0,0,0.08);
+  --radius: 18px;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin:0;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: radial-gradient(circle at top, #f5fbff 0%, var(--bg) 60%, #dbeeff 100%);
+  color: var(--text);
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 30px 16px;
+}
+
+.app{
+  width: min(900px, 100%);
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 28px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.header{
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.header h1{
+  margin: 0;
+  font-size: 34px;
+  letter-spacing: 0.5px;
+}
+
+.header p{
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.summary{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 18px 0 22px;
+}
+
+.card{
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.label{
+  display:block;
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.value{
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.value.income{ color: var(--income); }
+.value.expense{ color: var(--expense); }
+
+.panel{
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-top: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.panel h2{
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.form{
+  display: grid;
+  gap: 12px;
+}
+
+.field label{
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.hint{
+  display:block;
+  color: var(--muted);
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.field input{
+  width:100%;
+  margin-top: 6px;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  outline: none;
+  font-size: 14px;
+}
+
+.field input:focus{
+  border-color: rgba(30, 64, 175, 0.55);
+  box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.12);
+}
+
+.btn{
+  border: none;
+  background: var(--primary);
+  color: white;
+  padding: 12px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.2s;
+}
+
+.btn:hover{ background: var(--primaryHover); }
+
+.btn.secondary{
+  background: rgba(30, 64, 175, 0.10);
+  color: var(--primary);
+  border: 1px solid rgba(30, 64, 175, 0.25);
+}
+
+.btn.secondary:hover{
+  background: rgba(30, 64, 175, 0.16);
+}
+
+.panel-head{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.actions{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.search, .filter{
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  outline: none;
+}
+
+.list{
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0;
+  display: grid;
+  gap: 10px;
+}
+
+.item{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(245, 251, 255, 0.7);
+}
+
+.item .title{
+  font-weight: 700;
+}
+
+.item .meta{
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.badge{
+  font-weight: 800;
+}
+
+.badge.income{ color: var(--income); }
+.badge.expense{ color: var(--expense); }
+
+.item .right{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+}
+
+.icon-btn{
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  background: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.icon-btn:hover{
+  box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+}
+
+.footer-actions{
+  margin-top: 14px;
+  display:flex;
+  justify-content: flex-end;
+}
+
+.back{
+  display:inline-block;
+  margin-top: 12px;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.back:hover{ text-decoration: underline; }
+
+@media (max-width: 720px){
+  .summary{ grid-template-columns: 1fr; }
+  .header h1{ font-size: 28px; }
+}
