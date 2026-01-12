@@ -1,4 +1,3 @@
-/* Reset */
 * {
   box-sizing: border-box;
   font-family: "Segoe UI", Tahoma, sans-serif;
@@ -11,94 +10,132 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 30px;
 }
 
-/* Card */
+/* الكرت الأبيض الكبير */
 .container {
-  background: rgba(255, 255, 255, 0.9);
-  width: 340px;
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 15px 40px rgba(231, 84, 128, 0.25);
+  width: min(650px, 95vw);      /* أكبر */
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 26px;
+  padding: 38px;
+  box-shadow: 0 18px 55px rgba(231, 84, 128, 0.25);
   text-align: center;
+  backdrop-filter: blur(6px);
 }
 
-/* Title */
+/* العنوان */
 h1 {
+  margin: 0 0 10px;
+  font-size: 40px;             /* أكبر */
   color: #e75480;
-  margin-bottom: 5px;
+  font-weight: 800;
 }
 
 p {
+  margin: 0 0 22px;
   color: #777;
-  font-size: 14px;
+  font-size: 18px;             /* أكبر */
 }
 
-/* Input */
+/* input + add */
 .input-group {
   display: flex;
-  gap: 8px;
-  margin: 20px 0;
+  gap: 12px;
+  margin: 18px 0 22px;
 }
 
-input {
+#taskInput {
   flex: 1;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #f3b6c8;
+  padding: 16px 18px;          /* أكبر */
+  border-radius: 14px;
+  border: 2px solid #f7b7c8;
   outline: none;
+  font-size: 18px;
 }
 
-button {
+#taskInput::placeholder {
+  color: #aaa;
+}
+
+#addBtn {
+  padding: 16px 22px;
+  border-radius: 14px;
+  border: none;
   background: #e75480;
   color: white;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 700;
   cursor: pointer;
 }
 
-button:hover {
+#addBtn:hover {
   background: #d9436e;
 }
 
-/* List */
-ul {
+/* القائمة */
+#taskList {
   list-style: none;
   padding: 0;
+  margin: 0;
+  text-align: left;
 }
 
-li {
+#taskList li {
   background: #fde4ec;
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 18px;
 }
 
-li.done {
+.task-text {
+  flex: 1;
+  color: #444;
+}
+
+/* تشطيب */
+#taskList li.done .task-text {
   text-decoration: line-through;
-  opacity: 0.6;
+  opacity: 0.65;
 }
 
-/* Delete */
-.delete {
-  background: #ff6f91;
+/* الأزرار صح وخطا */
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
   border: none;
-  color: white;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  border-radius: 14px;
   cursor: pointer;
+  font-size: 22px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
 }
 
-/* Back link */
+.icon-btn:hover {
+  transform: translateY(-1px);
+}
+
+.done-btn { border: 2px solid #b7f7c8; }
+.del-btn  { border: 2px solid #ffb3c2; }
+
+/* رابط الرجوع */
 .back {
-  display: block;
-  margin-top: 15px;
-  font-size: 13px;
+  display: inline-block;
+  margin-top: 18px;
   color: #e75480;
   text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
 }
