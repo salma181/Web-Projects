@@ -1,39 +1,176 @@
-.todo-item{
+/* ===== Base ===== */
+* { box-sizing: border-box; }
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:"Segoe UI", Tahoma, sans-serif;
+  color:#333;
   display:flex;
-  justify-content:space-between;
+  justify-content:center;
+  align-items:flex-start;
+  padding:50px 16px;
+  position:relative;
+}
+
+/* خلفية وردية ناعمة */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background: radial-gradient(circle at top left, #ffe6ef 0%, #fff7fb 40%, #ffffff 100%);
+  z-index:-2;
+}
+
+/* لمعة خفيفة */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background: linear-gradient(120deg, rgba(231,84,128,0.08), rgba(255,255,255,0));
+  z-index:-1;
+}
+
+/* ===== Card ===== */
+.card{
+  width: min(560px, 100%);
+  background: rgba(255, 235, 245, 0.88);
+  border: 1px solid rgba(231,84,128,0.18);
+  border-radius: 22px;
+  padding: 28px 24px;
+  box-shadow: 0 18px 50px rgba(231,84,128,0.12);
+  backdrop-filter: blur(8px);
+}
+
+h1{
+  margin:0 0 6px;
+  color:#e75480;
+  font-size: 34px;
+  letter-spacing: .3px;
+}
+
+.sub{
+  margin:0 0 18px;
+  color:#6b5b63;
+}
+
+/* ===== Form Row ===== */
+.row{
+  display:flex;
+  gap:10px;
   align-items:center;
-  gap:12px;
-  padding:12px 14px;
-  margin-top:10px;
-  background: rgba(255,255,255,0.6);
-  border-radius: 14px;
-  border: 1px solid rgba(231,84,128,0.15);
+  margin-bottom: 14px;
 }
 
-.actions{
-  display:flex;
-  gap:8px;
+#todoInput{
+  flex:1;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(231,84,128,0.22);
+  background: rgba(255,255,255,0.75);
+  outline: none;
+  font-size: 15px;
 }
 
-.btn{
+#todoInput:focus{
+  border-color: rgba(231,84,128,0.5);
+  box-shadow: 0 0 0 4px rgba(231,84,128,0.10);
+}
+
+.row button{
   border:none;
-  padding:8px 12px;
-  border-radius: 12px;
+  padding: 12px 16px;
+  border-radius: 16px;
   cursor:pointer;
-  font-weight:600;
+  font-weight: 700;
+  background:#e75480;
+  color:#fff;
+  transition: .15s;
 }
 
-.done-btn{
-  background:#f7b7c8;
-  color:white;
+.row button:hover{
+  filter: brightness(0.95);
 }
 
-.del-btn{
-  background:#ffd6e0;
-  color:#8a2f4a;
+/* ===== List ===== */
+.list{
+  list-style:none;
+  padding:0;
+  margin: 10px 0 0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
 }
 
+.list li{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(231,84,128,0.16);
+}
+
+.list li span{
+  font-weight: 600;
+  word-break: break-word;
+}
+
+/* Done style */
+.list li span.done,
 .done{
   text-decoration: line-through;
   opacity: 0.6;
+}
+
+/* ===== Actions Buttons (JS classes supported) ===== */
+.actions{
+  display:flex;
+  gap:8px;
+  flex-shrink:0;
+}
+
+.btn, 
+.actions button{
+  border:none;
+  padding: 8px 12px;
+  border-radius: 14px;
+  cursor:pointer;
+  font-weight:700;
+  background:#f7b7c8;
+  color:#fff;
+  transition:.15s;
+}
+
+.btn:hover,
+.actions button:hover{
+  filter: brightness(0.95);
+}
+
+/* Done button */
+.done-btn{
+  background:#e75480 !important;
+}
+
+/* Delete button */
+.del-btn{
+  background:#ffd6e0 !important;
+  color:#8a2f4a !important;
+}
+
+/* ===== Footer Link ===== */
+.footer{
+  margin-top: 14px;
+}
+
+.footer a{
+  color:#e75480;
+  text-decoration:none;
+  font-weight:700;
+}
+
+.footer a:hover{
+  text-decoration:underline;
 }
