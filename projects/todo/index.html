@@ -1,59 +1,40 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>قائمة المهام | Salma</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <main class="app" aria-label="تطبيق قائمة المهام">
-    <header class="header">
-      <h1 class="title">قائمة المهام ✅</h1>
-      <p class="subtitle">أضيفي مهام، علّميها تم ✅، أو احذفيها ❌. كل شيء محفوظ تلقائيًا.</p>
-    </header>
 
-    <section class="panel">
-      <form id="taskForm" class="add-row" autocomplete="off">
-        <input
-          id="taskInput"
-          type="text"
-          placeholder="اكتبي مهمة…"
-          aria-label="اكتبي مهمة"
-          maxlength="120"
-        />
-        <button class="btn primary" type="submit">إضافة</button>
-      </form>
+  <main class="card">
+    <h1 class="title">قائمة المهام ✅</h1>
+    <p class="subtitle">أضيفي مهام، علّميها تم ✅ أو احذفيها ❌ — وكل شيء محفوظ تلقائيًا.</p>
 
-      <div class="tools">
-        <div class="segmented" role="group" aria-label="فلترة المهام">
-          <button class="seg-btn active" data-filter="all" type="button">الكل</button>
-          <button class="seg-btn" data-filter="active" type="button">غير منجز</button>
-          <button class="seg-btn" data-filter="done" type="button">منجز</button>
-        </div>
+    <div class="row">
+      <input id="taskInput" class="input" type="text" placeholder="اكتبي مهمة..." />
+      <button id="addBtn" class="btn btn-primary">إضافة</button>
+      <input id="searchInput" class="input" type="text" placeholder="بحث..." />
+    </div>
 
-        <div class="search">
-          <input id="searchInput" type="text" placeholder="بحث…" aria-label="بحث في المهام" />
-        </div>
+    <div class="filters" aria-label="filters">
+      <button class="chip active" data-filter="all">الكل</button>
+      <button class="chip" data-filter="active">غير منجز</button>
+      <button class="chip" data-filter="done">منجز</button>
+    </div>
+
+    <section id="list" class="list"></section>
+
+    <div class="meta">
+      <div id="counter">0 مهام • 0 منجز</div>
+      <div class="row">
+        <button id="clearDone" class="btn btn-ghost">مسح المنجز ✅</button>
+        <button id="clearAll" class="btn btn-danger">مسح الكل ❌</button>
       </div>
+    </div>
 
-      <div class="stats">
-        <span id="countText">0 مهام</span>
-        <span id="doneText">0 منجز</span>
-      </div>
-
-      <ul id="taskList" class="list" aria-label="قائمة المهام"></ul>
-
-      <div class="footer-actions">
-        <button id="clearDone" class="btn ghost" type="button">مسح المنجز ✅</button>
-        <button id="clearAll" class="btn danger" type="button">مسح الكل ❌</button>
-      </div>
-
-      <a class="back" href="../../index.html">← رجوع للبورتفوليو</a>
-    </section>
-
-    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <a class="back" href="../../index.html">← رجوع للبورتفوليو</a>
   </main>
 
   <script src="script.js"></script>
