@@ -1,15 +1,22 @@
-const STORAGE_KEY = "salma_todo_tasks_v1";
-
 const taskInput = document.getElementById("taskInput");
 const addBtn = document.getElementById("addBtn");
-const taskList = document.getElementById("taskList");
-const countText = document.getElementById("countText");
-const clearDoneBtn = document.getElementById("clearDoneBtn");
+const searchInput = document.getElementById("searchInput");
+const listEl = document.getElementById("list");
+const counterEl = document.getElementById("counter");
+const clearDoneBtn = document.getElementById("clearDone");
+const clearAllBtn = document.getElementById("clearAll");
+const chips = document.querySelectorAll(".chip");
 
-let filter = "all"; // all | active | done
+const STORAGE_KEY = "salma_todo_v1";
+
 let tasks = loadTasks();
+let currentFilter = "all";
+let searchQuery = "";
 
-// ---------- Storage ----------
+function saveTasks() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
+
 function loadTasks() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -19,140 +26,126 @@ function loadTasks() {
   }
 }
 
-function saveTasks() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-}
-
-// ---------- Helpers ----------
-function uid() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-}
-
-function normalizeText(text) {
-  return text.trim().replace(/\s+/g, " ");
-}
-
-function setFilter(newFilter) {
-  filter = newFilter;
-  document.querySelectorAll(".chip").forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.filter === filter);
-  });
-  render();
-}
-
-// ---------- Actions ----------
-function addTask() {
-  const text = normalizeText(taskInput.value);
-  if (!text) return;
+function addTask(text) {
+  const t = text.trim();
+  if (!t) return;
 
   tasks.unshift({
-    id: uid(),
-    text,
+    id: Date.now(),
+    text: t,
     done: false,
-    createdAt: Date.now(),
+    createdAt: new Date().toISOString()
   });
 
-  taskInput.value = "";
   saveTasks();
   render();
-  taskInput.focus();
 }
 
 function toggleDone(id) {
-  tasks = tasks.map((t) => (t.id === id ? { ...t, done: !t.done } : t));
+  tasks = tasks.map(t => t.id === id ? { ...t, done: !t.done } : t);
   saveTasks();
   render();
 }
 
 function deleteTask(id) {
-  tasks = tasks.filter((t) => t.id !== id);
+  tasks = tasks.filter(t => t.id !== id);
   saveTasks();
   render();
 }
 
 function clearDone() {
-  tasks = tasks.filter((t) => !t.done);
+  tasks = tasks.filter(t => !t.done);
   saveTasks();
   render();
 }
 
-// ---------- Render ----------
-function filteredTasks() {
-  if (filter === "active") return tasks.filter((t) => !t.done);
-  if (filter === "done") return tasks.filter((t) => t.done);
-  return tasks;
+function clearAll() {
+  tasks = [];
+  saveTasks();
+  render();
+}
+
+function setFilter(filter) {
+  currentFilter = filter;
+  chips.forEach(c => c.classList.toggle("active", c.dataset.filter === filter));
+  render();
+}
+
+function setSearch(q) {
+  searchQuery = q.trim().toLowerCase();
+  render();
+}
+
+function getVisibleTasks() {
+  let filtered = [...tasks];
+
+  if (currentFilter === "done") filtered = filtered.filter(t => t.done);
+  if (currentFilter === "active") filtered = filtered.filter(t => !t.done);
+
+  if (searchQuery) filtered = filtered.filter(t => t.text.toLowerCase().includes(searchQuery));
+
+  return filtered;
 }
 
 function render() {
-  const list = filteredTasks();
+  listEl.innerHTML = "";
 
-  taskList.innerHTML = "";
-
-  list.forEach((t) => {
-    const li = document.createElement("li");
-    li.className = "item" + (t.done ? " done" : "");
-    li.dataset.id = t.id;
+  const visible = getVisibleTasks();
+  visible.forEach(t => {
+    const item = document.createElement("div");
+    item.className = "item" + (t.done ? " done" : "");
 
     const text = document.createElement("div");
-    text.className = "taskText";
+    text.className = "text";
     text.textContent = t.text;
 
     const actions = document.createElement("div");
     actions.className = "actions";
 
-    // ✅ toggle done
+    // ✅ Button (mark done/undo)
     const okBtn = document.createElement("button");
     okBtn.className = "iconBtn ok";
-    okBtn.title = "Done";
     okBtn.type = "button";
-    okBtn.textContent = "✓";
+    okBtn.title = t.done ? "إلغاء الإنجاز" : "تم";
+    okBtn.textContent = "✅";
     okBtn.addEventListener("click", () => toggleDone(t.id));
 
-    // ❌ delete
+    // ❌ Button (delete)
     const delBtn = document.createElement("button");
     delBtn.className = "iconBtn del";
-    delBtn.title = "Delete";
     delBtn.type = "button";
-    delBtn.textContent = "✕";
+    delBtn.title = "حذف";
+    delBtn.textContent = "❌";
     delBtn.addEventListener("click", () => deleteTask(t.id));
 
     actions.appendChild(okBtn);
     actions.appendChild(delBtn);
 
-    li.appendChild(text);
-    li.appendChild(actions);
+    item.appendChild(text);
+    item.appendChild(actions);
 
-    // Double click on task text to toggle (ميزة لطيفة)
-    text.addEventListener("dblclick", () => toggleDone(t.id));
-
-    taskList.appendChild(li);
+    listEl.appendChild(item);
   });
 
   const total = tasks.length;
-  const doneCount = tasks.filter((t) => t.done).length;
-  const activeCount = total - doneCount;
-
-  countText.textContent =
-    total === 0
-      ? "No tasks yet"
-      : `${total} tasks • ${activeCount} active • ${doneCount} done`;
-
-  clearDoneBtn.disabled = doneCount === 0;
-  clearDoneBtn.style.opacity = doneCount === 0 ? "0.5" : "1";
+  const done = tasks.filter(t => t.done).length;
+  counterEl.textContent = `${total} مهام • ${done} منجز`;
 }
 
-// ---------- Events ----------
-addBtn.addEventListener("click", addTask);
-
+/* Events */
+addBtn.addEventListener("click", () => addTask(taskInput.value));
 taskInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") addTask();
+  if (e.key === "Enter") addTask(taskInput.value);
+});
+
+searchInput.addEventListener("input", (e) => setSearch(e.target.value));
+
+chips.forEach(chip => {
+  chip.addEventListener("click", () => setFilter(chip.dataset.filter));
 });
 
 clearDoneBtn.addEventListener("click", clearDone);
+clearAllBtn.addEventListener("click", clearAll);
 
-document.querySelectorAll(".chip").forEach((btn) => {
-  btn.addEventListener("click", () => setFilter(btn.dataset.filter));
-});
-
-// First render
+/* First render */
 render();
