@@ -1,1 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notes App | Salma</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
+  <main class="app">
+    <header class="header">
+      <div class="brand">
+        <h1>Notes</h1>
+        <p>Write, pin, search, and save notes automatically.</p>
+      </div>
+
+      <div class="header-actions">
+        <button id="newNoteBtn" class="btn primary" type="button">New Note</button>
+        <button id="exportBtn" class="btn ghost" type="button">Export JSON</button>
+      </div>
+    </header>
+
+    <section class="topbar">
+      <div class="search-wrap">
+        <input id="searchInput" class="input" type="text" placeholder="Search notes..." />
+      </div>
+
+      <div class="filters">
+        <button class="chip active" data-filter="all" type="button">All</button>
+        <button class="chip" data-filter="pinned" type="button">Pinned</button>
+        <button class="chip" data-filter="recent" type="button">Recent</button>
+      </div>
+
+      <div class="sort">
+        <label class="label" for="sortSelect">Sort</label>
+        <select id="sortSelect" class="select">
+          <option value="updated_desc" selected>Updated (new → old)</option>
+          <option value="updated_asc">Updated (old → new)</option>
+          <option value="title_asc">Title (A → Z)</option>
+          <option value="title_desc">Title (Z → A)</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="layout">
+      <aside class="list-panel">
+        <div class="list-head">
+          <div class="stats">
+            <span id="countText">0 notes</span>
+            <span class="dot">•</span>
+            <span id="pinnedText">0 pinned</span>
+          </div>
+
+          <button id="clearAllBtn" class="btn danger tiny" type="button" title="Delete all notes">
+            Clear
+          </button>
+        </div>
+
+        <ul id="notesList" class="notes-list" aria-label="Notes list"></ul>
+      </aside>
+
+      <section class="editor-panel">
+        <div id="emptyState" class="empty">
+          <h2>No note selected</h2>
+          <p>Create a new note or select one from the list.</p>
+          <button id="emptyNewBtn" class="btn primary" type="button">Create Note</button>
+        </div>
+
+        <div id="editor" class="editor hidden">
+          <div class="editor-actions">
+            <button id="pinBtn" class="btn ghost" type="button">Pin</button>
+            <button id="duplicateBtn" class="btn ghost" type="button">Duplicate</button>
+            <button id="deleteBtn" class="btn danger" type="button">Delete</button>
+          </div>
+
+          <div class="fields">
+            <div class="field">
+              <label class="label" for="titleInput">Title</label>
+              <input id="titleInput" class="input" type="text" placeholder="Note title..." maxlength="80" />
+            </div>
+
+            <div class="field">
+              <label class="label" for="contentInput">Content</label>
+              <textarea id="contentInput" class="textarea" placeholder="Write your note..." rows="10"></textarea>
+            </div>
+          </div>
+
+          <div class="meta">
+            <span id="metaText">Last updated: —</span>
+            <span class="sep">|</span>
+            <span id="wordCount">0 words</span>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <footer class="footer">
+      <a class="back" href="../../index.html">← Back to portfolio</a>
+      <div id="toast" class="toast" aria-live="polite"></div>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
