@@ -1,1 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mini Shop | Salma</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">S</div>
+      <div>
+        <h1>Mini Shop</h1>
+        <p class="sub">Beautiful UI • Cart • Search • Filter</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <div class="search-wrap">
+        <input id="searchInput" type="search" placeholder="Search products..." />
+      </div>
+
+      <select id="categoryFilter" class="select">
+        <option value="all">All categories</option>
+      </select>
+
+      <button id="openCartBtn" class="cart-btn" aria-label="Open cart">
+        🛒 <span id="cartCount" class="badge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-card">
+      <h2>Shop smarter ✨</h2>
+      <p>
+        A mini e-commerce demo with a polished UI. Add items to cart, adjust quantities,
+        and checkout (demo). Your cart is saved automatically.
+      </p>
+      <div class="hero-pills">
+        <span class="pill">Responsive</span>
+        <span class="pill">LocalStorage</span>
+        <span class="pill">Search & Filter</span>
+      </div>
+      <a class="back" href="../../index.html">← Back to portfolio</a>
+    </div>
+
+    <div class="hero-illustration" aria-hidden="true">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="glass">
+        <div class="mini-card"></div>
+        <div class="mini-card"></div>
+        <div class="mini-card"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <main class="container">
+    <div class="section-head">
+      <h3>Products</h3>
+      <p class="muted">Tip: try searching “mug” or filter “Accessories”.</p>
+    </div>
+
+    <div id="productsGrid" class="grid"></div>
+  </main>
+
+  <!-- Cart Drawer -->
+  <aside id="cartDrawer" class="drawer" aria-hidden="true">
+    <div class="drawer-header">
+      <h3>Your Cart</h3>
+      <button id="closeCartBtn" class="icon-btn" aria-label="Close cart">✕</button>
+    </div>
+
+    <div id="cartItems" class="cart-items"></div>
+
+    <div class="drawer-footer">
+      <div class="totals">
+        <div class="row"><span>Subtotal</span><strong id="subtotal">$0.00</strong></div>
+        <div class="row"><span>Shipping</span><strong id="shipping">$0.00</strong></div>
+        <div class="row total"><span>Total</span><strong id="total">$0.00</strong></div>
+      </div>
+
+      <button id="checkoutBtn" class="primary">Checkout (Demo)</button>
+      <button id="clearCartBtn" class="ghost">Clear cart</button>
+    </div>
+  </aside>
+
+  <!-- Backdrop -->
+  <div id="backdrop" class="backdrop" hidden></div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
