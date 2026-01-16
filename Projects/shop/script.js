@@ -162,4 +162,82 @@ function calcSubtotal() {
   let sum = 0;
   for (const [id, qty] of Object.entries(cart)) {
     const p = PRODUCTS.find(x => x.id === id);
-    if
+    if (p) sum += p.price * qty;
+  }
+  return sum;
+}
+
+function renderCart() {
+  const count = cartTotalCount();
+  cartCount.textContent = count;
+
+  cartItemsEl.innerHTML = "";
+  const entries = Object.entries(cart);
+
+  if (entries.length === 0) {
+    cartItemsEl.innerHTML = `<p class="muted" style="padding:10px 6px;">Your cart is empty. Add something ✨</p>`;
+  } else {
+    entries.forEach(([id, qty]) => {
+      const p = PRODUCTS.find(x => x.id === id);
+      if (!p) return;
+
+      const item = document.createElement("div");
+      item.className = "cart-item";
+      item.innerHTML = `
+        <div class="thumb">${p.emoji}</div>
+        <div>
+          <p class="ci-title">${p.title}</p>
+          <p class="ci-meta">${p.category} • ${money(p.price)}</p>
+        </div>
+        <div class="qty">
+          <button data-minus="${id}" aria-label="Decrease">−</button>
+          <strong>${qty}</strong>
+          <button data-plus="${id}" aria-label="Increase">+</button>
+        </div>
+      `;
+      cartItemsEl.appendChild(item);
+    });
+
+    cartItemsEl.querySelectorAll("[data-minus]").forEach(b => {
+      b.addEventListener("click", () => changeQty(b.getAttribute("data-minus"), -1));
+    });
+    cartItemsEl.querySelectorAll("[data-plus]").forEach(b => {
+      b.addEventListener("click", () => changeQty(b.getAttribute("data-plus"), +1));
+    });
+  }
+
+  const subtotal = calcSubtotal();
+  const shipping = subtotal === 0 ? 0 : (subtotal >= 50 ? 0 : 4.99);
+  const total = subtotal + shipping;
+
+  subtotalEl.textContent = money(subtotal);
+  shippingEl.textContent = money(shipping);
+  totalEl.textContent = money(total);
+}
+
+clearCartBtn.addEventListener("click", () => {
+  cart = {};
+  saveCart();
+  renderCart();
+  showToast("Cart cleared 🧹");
+});
+
+checkoutBtn.addEventListener("click", () => {
+  if (cartTotalCount() === 0) {
+    showToast("Cart is empty 🙂");
+    return;
+  }
+  showToast("Checkout completed (demo) 🎉");
+  cart = {};
+  saveCart();
+  renderCart();
+  closeCart();
+});
+
+searchInput.addEventListener("input", renderProducts);
+categoryFilter.addEventListener("change", renderProducts);
+
+// Init
+renderCategoryFilter();
+renderProducts();
+renderCart();
