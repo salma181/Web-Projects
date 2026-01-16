@@ -1,1 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Auth UI | Salma</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="wrap">
+    <header class="top">
+      <h1>Auth UI</h1>
+      <p>Login / Register interface with validation + localStorage demo.</p>
+      <a class="back" href="../../index.html">← Back to portfolio</a>
+    </header>
 
+    <section class="card">
+      <div class="tabs">
+        <button class="tab active" data-tab="login">Login</button>
+        <button class="tab" data-tab="register">Register</button>
+      </div>
+
+      <!-- LOGIN -->
+      <form id="loginForm" class="form show" data-pane="login">
+        <div class="field">
+          <label>Email</label>
+          <input id="loginEmail" type="email" placeholder="you@example.com" required />
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <div class="pass">
+            <input id="loginPassword" type="password" placeholder="Your password" required minlength="6" />
+            <button class="icon" type="button" id="toggleLoginPass">Show</button>
+          </div>
+        </div>
+
+        <button class="btn primary" type="submit">Login</button>
+        <p class="hint">Demo account is the one you create in Register.</p>
+      </form>
+
+      <!-- REGISTER -->
+      <form id="registerForm" class="form" data-pane="register">
+        <div class="field">
+          <label>Full name</label>
+          <input id="regName" type="text" placeholder="Full name" required minlength="3" />
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input id="regEmail" type="email" placeholder="you@example.com" required />
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <div class="pass">
+            <input id="regPassword" type="password" placeholder="Min 6 chars" required minlength="6" />
+            <button class="icon" type="button" id="toggleRegPass">Show</button>
+          </div>
+          <small class="small">Use at least 6 characters.</small>
+        </div>
+
+        <div class="field">
+          <label>Confirm password</label>
+          <input id="regConfirm" type="password" placeholder="Repeat password" required minlength="6" />
+        </div>
+
+        <button class="btn primary" type="submit">Create Account</button>
+        <p class="hint">This is a front-end demo (saved in localStorage).</p>
+      </form>
+
+      <!-- SUCCESS BOX -->
+      <div id="welcome" class="welcome hidden">
+        <h2>Welcome 👋</h2>
+        <p id="welcomeText">—</p>
+        <button id="logoutBtn" class="btn ghost" type="button">Logout</button>
+      </div>
+
+      <div id="toast" class="toast" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
