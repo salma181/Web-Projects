@@ -1,150 +1,112 @@
-"use strict";
-
-const USERS_KEY = "salma_auth_users_v1";
-const SESSION_KEY = "salma_auth_session_v1";
-
-const tabs = document.querySelectorAll(".tab");
-const panes = document.querySelectorAll(".form");
+const tabLogin = document.getElementById("tabLogin");
+const tabSignup = document.getElementById("tabSignup");
+const indicator = document.querySelector(".tab-indicator");
 
 const loginForm = document.getElementById("loginForm");
-const registerForm = document.getElementById("registerForm");
+const signupForm = document.getElementById("signupForm");
 
-const loginEmail = document.getElementById("loginEmail");
-const loginPassword = document.getElementById("loginPassword");
-const toggleLoginPass = document.getElementById("toggleLoginPass");
+const alertBox = document.getElementById("alert");
+const fillDemo = document.getElementById("fillDemo");
 
-const regName = document.getElementById("regName");
-const regEmail = document.getElementById("regEmail");
-const regPassword = document.getElementById("regPassword");
-const regConfirm = document.getElementById("regConfirm");
-const toggleRegPass = document.getElementById("toggleRegPass");
-
-const welcomeBox = document.getElementById("welcome");
-const welcomeText = document.getElementById("welcomeText");
-const logoutBtn = document.getElementById("logoutBtn");
-
-const toastEl = document.getElementById("toast");
-
-function showToast(msg){
-  toastEl.textContent = msg;
-  toastEl.classList.add("show");
-  clearTimeout(showToast._t);
-  showToast._t = setTimeout(()=>toastEl.classList.remove("show"), 1600);
+function showAlert(msg, type="success"){
+  alertBox.textContent = msg;
+  alertBox.classList.remove("hidden","success","error");
+  alertBox.classList.add(type);
+  setTimeout(()=> alertBox.classList.add("hidden"), 3200);
 }
 
-function loadUsers(){
-  try{
-    const raw = localStorage.getItem(USERS_KEY);
-    const arr = raw ? JSON.parse(raw) : [];
-    return Array.isArray(arr) ? arr : [];
-  } catch { return []; }
-}
-function saveUsers(users){
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-function setSession(email){
-  localStorage.setItem(SESSION_KEY, email);
-}
-function getSession(){
-  return localStorage.getItem(SESSION_KEY);
-}
-function clearSession(){
-  localStorage.removeItem(SESSION_KEY);
+function setTab(which){
+  const login = which === "login";
+
+  tabLogin.classList.toggle("active", login);
+  tabLogin.setAttribute("aria-selected", String(login));
+
+  tabSignup.classList.toggle("active", !login);
+  tabSignup.setAttribute("aria-selected", String(!login));
+
+  loginForm.classList.toggle("hidden", !login);
+  signupForm.classList.toggle("hidden", login);
+
+  // move indicator
+  indicator.style.left = login ? "6px" : "calc(50% + 5px)";
 }
 
-function isEmailValid(email){
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
+tabLogin.addEventListener("click", ()=> setTab("login"));
+tabSignup.addEventListener("click", ()=> setTab("signup"));
 
-function switchTab(name){
-  tabs.forEach(t => t.classList.toggle("active", t.dataset.tab === name));
-  panes.forEach(p => p.classList.toggle("show", p.dataset.pane === name));
-  welcomeBox.classList.add("hidden");
-}
-
-tabs.forEach(t => t.addEventListener("click", () => switchTab(t.dataset.tab)));
-
-toggleLoginPass.addEventListener("click", () => {
-  loginPassword.type = loginPassword.type === "password" ? "text" : "password";
-  toggleLoginPass.textContent = loginPassword.type === "password" ? "Show" : "Hide";
+document.querySelectorAll("[data-toggle]").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const id = btn.getAttribute("data-toggle");
+    const input = document.getElementById(id);
+    const isHidden = input.type === "password";
+    input.type = isHidden ? "text" : "password";
+    btn.textContent = isHidden ? "Hide" : "Show";
+  });
 });
 
-toggleRegPass.addEventListener("click", () => {
-  regPassword.type = regPassword.type === "password" ? "text" : "password";
-  toggleRegPass.textContent = regPassword.type === "password" ? "Show" : "Hide";
-});
-
-registerForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  const name = regName.value.trim();
-  const email = regEmail.value.trim().toLowerCase();
-  const pass = regPassword.value;
-  const confirm = regConfirm.value;
-
-  if(name.length < 3) return showToast("Name is too short.");
-  if(!isEmailValid(email)) return showToast("Enter a valid email.");
-  if(pass.length < 6) return showToast("Password must be 6+ characters.");
-  if(pass !== confirm) return showToast("Passwords do not match.");
-
-  const users = loadUsers();
-  const exists = users.some(u => u.email === email);
-  if(exists) return showToast("Email already registered.");
-
-  // Simple demo user (front-end only)
-  users.push({ name, email, pass });
-  saveUsers(users);
-
-  showToast("Account created ✅ Now login.");
-  registerForm.reset();
-  switchTab("login");
-  loginEmail.value = email;
-  loginPassword.focus();
-});
-
-loginForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  const email = loginEmail.value.trim().toLowerCase();
-  const pass = loginPassword.value;
-
-  if(!isEmailValid(email)) return showToast("Enter a valid email.");
-  if(pass.length < 6) return showToast("Password must be 6+ characters.");
-
-  const users = loadUsers();
-  const user = users.find(u => u.email === email && u.pass === pass);
-  if(!user) return showToast("Wrong email or password.");
-
-  setSession(email);
-  showWelcome(user);
-});
-
-function showWelcome(user){
-  panes.forEach(p => p.classList.remove("show"));
-  tabs.forEach(t => t.classList.remove("active"));
-
-  welcomeText.textContent = `Logged in as ${user.name} (${user.email}).`;
-  welcomeBox.classList.remove("hidden");
-  showToast("Logged in ✅");
+// Storage
+function getUsers(){
+  try { return JSON.parse(localStorage.getItem("auth_users") || "[]"); }
+  catch { return []; }
 }
-
-logoutBtn.addEventListener("click", () => {
-  clearSession();
-  showToast("Logged out.");
-  switchTab("login");
-});
-
-// Auto-login if session exists
-(function init(){
-  const email = getSession();
-  if(!email) return switchTab("login");
-
-  const users = loadUsers();
-  const user = users.find(u => u.email === email);
-  if(user){
-    showWelcome(user);
-  } else {
-    clearSession();
-    switchTab("login");
+function setUsers(users){
+  localStorage.setItem("auth_users", JSON.stringify(users));
+}
+function saveSession(email, remember){
+  const session = { email, time: Date.now() };
+  localStorage.setItem("auth_session", JSON.stringify(session));
+  if (!remember){
+    // still saved for demo, but you can clear on close if you want (not possible reliably without backend)
   }
-})();
+}
+
+fillDemo.addEventListener("click", ()=>{
+  document.getElementById("loginEmail").value = "demo@demo.com";
+  document.getElementById("loginPassword").value = "123456";
+  showAlert("Demo filled ✅", "success");
+});
+
+signupForm.addEventListener("submit", (e)=>{
+  e.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("signupEmail").value.trim().toLowerCase();
+  const pass = document.getElementById("signupPassword").value;
+  const confirm = document.getElementById("confirm").value;
+
+  if (name.length < 2) return showAlert("Name is too short.", "error");
+  if (pass.length < 6) return showAlert("Password must be at least 6 characters.", "error");
+  if (pass !== confirm) return showAlert("Passwords do not match.", "error");
+
+  const users = getUsers();
+  const exists = users.some(u => u.email === email);
+  if (exists) return showAlert("This email is already registered.", "error");
+
+  users.push({ name, email, pass });
+  setUsers(users);
+
+  showAlert("Account created ✅ الآن سجلي دخول.", "success");
+  signupForm.reset();
+  setTab("login");
+  document.getElementById("loginEmail").value = email;
+});
+
+loginForm.addEventListener("submit", (e)=>{
+  e.preventDefault();
+
+  const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+  const pass = document.getElementById("loginPassword").value;
+  const remember = document.getElementById("remember").checked;
+
+  const users = getUsers();
+  const user = users.find(u => u.email === email && u.pass === pass);
+
+  if (!user) return showAlert("Wrong email or password.", "error");
+
+  saveSession(email, remember);
+  showAlert(`Welcome, ${user.name} ✅`, "success");
+  loginForm.reset();
+});
+
+// Default
+setTab("login");
