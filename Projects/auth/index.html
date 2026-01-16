@@ -7,76 +7,154 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="wrap">
-    <header class="top">
-      <h1>Auth UI</h1>
-      <p>Login / Register interface with validation + localStorage demo.</p>
-      <a class="back" href="../../index.html">← Back to portfolio</a>
-    </header>
 
+  <main class="shell">
     <section class="card">
-      <div class="tabs">
-        <button class="tab active" data-tab="login">Login</button>
-        <button class="tab" data-tab="register">Register</button>
-      </div>
 
-      <!-- LOGIN -->
-      <form id="loginForm" class="form show" data-pane="login">
-        <div class="field">
-          <label>Email</label>
-          <input id="loginEmail" type="email" placeholder="you@example.com" required />
-        </div>
-
-        <div class="field">
-          <label>Password</label>
-          <div class="pass">
-            <input id="loginPassword" type="password" placeholder="Your password" required minlength="6" />
-            <button class="icon" type="button" id="toggleLoginPass">Show</button>
+      <!-- Left Visual -->
+      <aside class="visual" aria-hidden="true">
+        <div class="brand">
+          <div class="logo">S</div>
+          <div class="brand-text">
+            <div class="brand-title">UI Design</div>
+            <div class="brand-sub">Splash • Login • Home</div>
           </div>
         </div>
 
-        <button class="btn primary" type="submit">Login</button>
-        <p class="hint">Demo account is the one you create in Register.</p>
-      </form>
+        <div class="visual-art">
+          <!-- Simple “3D-ish” SVG illustration (no external images) -->
+          <svg viewBox="0 0 520 420" class="art" role="img" aria-label="Illustration">
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="rgba(255,255,255,0.95)"/>
+                <stop offset="1" stop-color="rgba(255,255,255,0.55)"/>
+              </linearGradient>
+              <linearGradient id="g2" x1="1" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#6FE7D8"/>
+                <stop offset="1" stop-color="#1EA8C7"/>
+              </linearGradient>
+              <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#0b4a58" flood-opacity="0.18"/>
+              </filter>
+            </defs>
 
-      <!-- REGISTER -->
-      <form id="registerForm" class="form" data-pane="register">
-        <div class="field">
-          <label>Full name</label>
-          <input id="regName" type="text" placeholder="Full name" required minlength="3" />
-        </div>
+            <circle cx="380" cy="120" r="130" fill="rgba(255,255,255,0.18)"/>
+            <circle cx="420" cy="260" r="150" fill="rgba(255,255,255,0.12)"/>
 
-        <div class="field">
-          <label>Email</label>
-          <input id="regEmail" type="email" placeholder="you@example.com" required />
-        </div>
+            <g filter="url(#shadow)">
+              <path d="M130 250c0-28 22-50 50-50h190c28 0 50 22 50 50v70c0 28-22 50-50 50H180c-28 0-50-22-50-50z"
+                    fill="url(#g1)"/>
+              <path d="M165 240c0-14 11-25 25-25h215c14 0 25 11 25 25v18H165z"
+                    fill="rgba(10,90,110,0.08)"/>
+              <path d="M210 265h170" stroke="rgba(10,90,110,0.22)" stroke-width="8" stroke-linecap="round"/>
+              <path d="M210 292h120" stroke="rgba(10,90,110,0.14)" stroke-width="8" stroke-linecap="round"/>
+            </g>
 
-        <div class="field">
-          <label>Password</label>
-          <div class="pass">
-            <input id="regPassword" type="password" placeholder="Min 6 chars" required minlength="6" />
-            <button class="icon" type="button" id="toggleRegPass">Show</button>
+            <g filter="url(#shadow)">
+              <path d="M160 120c0-26 21-47 47-47h106c26 0 47 21 47 47v60c0 26-21 47-47 47H207c-26 0-47-21-47-47z"
+                    fill="url(#g2)" opacity="0.95"/>
+              <circle cx="305" cy="105" r="18" fill="rgba(255,255,255,0.85)"/>
+              <rect x="195" y="150" width="140" height="12" rx="6" fill="rgba(255,255,255,0.85)"/>
+              <rect x="195" y="172" width="110" height="10" rx="5" fill="rgba(255,255,255,0.65)"/>
+            </g>
+
+            <g filter="url(#shadow)">
+              <circle cx="140" cy="330" r="42" fill="rgba(255,255,255,0.85)"/>
+              <path d="M120 330h40" stroke="#1EA8C7" stroke-width="10" stroke-linecap="round"/>
+              <path d="M140 310v40" stroke="#6FE7D8" stroke-width="10" stroke-linecap="round"/>
+            </g>
+          </svg>
+
+          <div class="visual-copy">
+            <h3>Build polished UI</h3>
+            <p>Clean layout, smooth tabs, validation, and localStorage demo.</p>
           </div>
-          <small class="small">Use at least 6 characters.</small>
         </div>
 
-        <div class="field">
-          <label>Confirm password</label>
-          <input id="regConfirm" type="password" placeholder="Repeat password" required minlength="6" />
+        <div class="visual-badges">
+          <span class="pill">Responsive</span>
+          <span class="pill">Accessible</span>
+          <span class="pill">LocalStorage</span>
+        </div>
+      </aside>
+
+      <!-- Right Form -->
+      <section class="panel">
+        <div class="panel-top">
+          <h1>Welcome 👋</h1>
+          <p class="muted">Login or create an account (demo).</p>
         </div>
 
-        <button class="btn primary" type="submit">Create Account</button>
-        <p class="hint">This is a front-end demo (saved in localStorage).</p>
-      </form>
+        <div class="tabs" role="tablist" aria-label="Auth tabs">
+          <button class="tab active" id="tabLogin" role="tab" aria-selected="true" type="button">Login</button>
+          <button class="tab" id="tabSignup" role="tab" aria-selected="false" type="button">Sign up</button>
+          <div class="tab-indicator" aria-hidden="true"></div>
+        </div>
 
-      <!-- SUCCESS BOX -->
-      <div id="welcome" class="welcome hidden">
-        <h2>Welcome 👋</h2>
-        <p id="welcomeText">—</p>
-        <button id="logoutBtn" class="btn ghost" type="button">Logout</button>
-      </div>
+        <div id="alert" class="alert hidden" role="status" aria-live="polite"></div>
 
-      <div id="toast" class="toast" aria-live="polite"></div>
+        <!-- Login -->
+        <form id="loginForm" class="form" autocomplete="on">
+          <div class="field">
+            <label>Email</label>
+            <input id="loginEmail" type="email" placeholder="you@example.com" required />
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <div class="row">
+              <input id="loginPassword" type="password" placeholder="Your password" required />
+              <button class="ghost" type="button" data-toggle="loginPassword">Show</button>
+            </div>
+          </div>
+
+          <div class="meta">
+            <label class="check">
+              <input id="remember" type="checkbox" />
+              Remember me
+            </label>
+            <button class="link" type="button" id="fillDemo">Use demo</button>
+          </div>
+
+          <button class="primary" type="submit">Login</button>
+          <p class="tiny muted">Tip: Create an account first in Sign up.</p>
+        </form>
+
+        <!-- Sign up -->
+        <form id="signupForm" class="form hidden" autocomplete="on">
+          <div class="field">
+            <label>Full name</label>
+            <input id="name" type="text" placeholder="Full name" required />
+          </div>
+
+          <div class="field">
+            <label>Email</label>
+            <input id="signupEmail" type="email" placeholder="you@example.com" required />
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <div class="row">
+              <input id="signupPassword" type="password" placeholder="Min 6 chars" required />
+              <button class="ghost" type="button" data-toggle="signupPassword">Show</button>
+            </div>
+            <small class="tiny muted">At least 6 characters.</small>
+          </div>
+
+          <div class="field">
+            <label>Confirm password</label>
+            <input id="confirm" type="password" placeholder="Confirm password" required />
+          </div>
+
+          <button class="primary" type="submit">Create account</button>
+          <p class="tiny muted">Saved locally in your browser (localStorage).</p>
+        </form>
+
+        <div class="panel-bottom">
+          <a class="back" href="../../index.html">← Back to portfolio</a>
+        </div>
+      </section>
+
     </section>
   </main>
 
